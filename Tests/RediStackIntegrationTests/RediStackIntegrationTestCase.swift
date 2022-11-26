@@ -19,6 +19,9 @@ class RediStackIntegrationTestCase: RedisIntegrationTestCase {
     override var redisHostname: String {
         return ProcessInfo.processInfo.environment["REDIS_URL"] ?? "localhost"
     }
+    override var redisUsername: String? {
+        return ProcessInfo.processInfo.environment["REDIS_USERNAME"]
+    }
     override var redisPassword: String? {
         return ProcessInfo.processInfo.environment["REDIS_PW"]
     }

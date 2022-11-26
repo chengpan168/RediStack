@@ -50,6 +50,14 @@ extension RedisCommand {
         let args = [RESPValue(bulk: password)]
         return .init(keyword: "AUTH", arguments: args)
     }
+    
+    /// [AUTH](https://redis.io/commands/auth)
+    /// - Parameter username: The username to authenticate with.
+    /// - Parameter password: The password to authenticate with.
+    public static func auth(username: String?, password: String) -> RedisCommand<Void> {
+        let args:[RESPValue] = [RESPValue(from: username ?? "default"), RESPValue(from: password)]
+        return .init(keyword: "AUTH", arguments: args)
+    }
 
     /// [SELECT](https://redis.io/commands/select)
     /// - Parameter index: The 0-based index of the database that the connection that sends this command will execute later commands against.
@@ -94,6 +102,24 @@ extension RedisClient {
         return self.send(.auth(with: password), eventLoop: eventLoop, logger: logger)
     }
 
+    /// Requests the client to authenticate with Redis to allow other commands to be executed.
+    ///
+    /// See ``RedisCommand/auth(username:, password:)``
+    /// - Parameters:
+    ///     - username: The username to authenticate with.
+    ///     - password: The password to authenticate with.
+    ///     - eventLoop: An optional event loop to hop to for any further chaining on the returned event loop future.
+    ///     - logger: An optional logger instance to use for logs generated from this command.
+    /// - Returns: A `NIO.EventLoopFuture` that resolves if the password as accepted, otherwise it fails.
+    public func authorize(
+        username: String?,
+        password: String,
+        eventLoop: EventLoop? = nil,
+        logger: Logger? = nil
+    ) -> EventLoopFuture<Void> {
+        return self.send(.auth(username: username, password: password), eventLoop: eventLoop, logger: logger)
+    }
+    
     /// Selects the Redis logical database having the given zero-based numeric index.
     ///
     /// See ``RedisCommand/select(database:)``

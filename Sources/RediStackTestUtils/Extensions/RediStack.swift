@@ -23,9 +23,10 @@ extension RedisConnection.Configuration {
     public init(
         host: String = RedisConnection.Configuration.defaultHostname,
         port: Int = RedisConnection.Configuration.defaultPort,
+        username: String? = nil,
         password: String? = nil
     ) throws {
-        try self.init(hostname: host, port: port, password: password)
+        try self.init(hostname: host, port: port, username: username, password: password)
     }
 }
 
