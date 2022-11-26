@@ -68,7 +68,15 @@ public class RedisConnectionPool {
     /// hit, but either way, 100 concurrent connection requests ought to be plenty in this case.
     private static let maximumBufferedConnectionRequests = 100
     
-    public init(configuration: Configuration, boundEventLoop: EventLoop) {
+    public convenience init(configuration: Configuration, boundEventLoop: EventLoop) {
+        self.init(configuration: configuration, boundEventLoop: boundEventLoop, connectionFactory: nil)
+    }
+    
+    public init(
+        configuration: Configuration,
+        boundEventLoop: EventLoop,
+        connectionFactory: ((EventLoop) -> EventLoopFuture<RedisConnection>)?
+    ) {
         var config = configuration
 
         self.loop = boundEventLoop
@@ -91,7 +99,7 @@ public class RedisConnectionPool {
             connectionRetryStrategy: self.configuration.retryStrategy,
             loop: boundEventLoop,
             poolLogger: config.poolDefaultLogger,
-            connectionFactory: self.connectionFactory(_:)
+            connectionFactory: connectionFactory ?? self.connectionFactory(_:)
         )
     }
 }
