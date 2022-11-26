@@ -24,6 +24,8 @@ extension RedisConnectionPool {
         // this needs to be var so it can be updated by the pool with the pool id
         /// The logger that will be used by connections by default when generating logs.
         public internal(set) var defaultLogger: Logger
+        /// The username used to authenticate connections.
+        public let username: String?
         /// The password used to authenticate connections.
         public let password: String?
         /// The initial database index that connections should use.
@@ -41,11 +43,13 @@ extension RedisConnectionPool {
         ///     - tcpClient: If you have chosen to configure a `NIO.ClientBootstrap` yourself, this will be used instead of the `.makeRedisTCPClient` factory instance.
         public init(
             initialDatabase: Int? = nil,
+            username: String? = nil,
             password: String? = nil,
             defaultLogger: Logger? = nil,
             tcpClient: ClientBootstrap? = nil
         ) {
             self.initialDatabase = initialDatabase
+            self.username = username
             self.password = password
             self.defaultLogger = defaultLogger ?? RedisConnection.Configuration.defaultLogger
             self.tcpClient = tcpClient
