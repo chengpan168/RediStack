@@ -271,7 +271,7 @@ extension RedisConnectionPool {
             return targetLoop.makeFailedFuture(error)
         }
 
-        return RedisConnection
+        let future = RedisConnection
             .make(
                 configuration: connectionConfig,
                 boundEventLoop: targetLoop,
@@ -282,6 +282,12 @@ extension RedisConnectionPool {
                 connection.allowSubscriptions = false
                 return connection
             }
+            
+            future.whenComplete { result in
+                self.configuration.connectionHandler?(result)
+            }
+        
+        return future
     }
 
     private func prepareLoggerForUse(_ logger: Logger?) -> Logger {

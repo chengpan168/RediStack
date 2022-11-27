@@ -217,6 +217,8 @@ extension RedisConnectionPool {
         public let connectionCountBehavior: ConnectionCountBehavior
         /// The strategy used by the connection pool to handle retrying to find an available "active" connection to use.
         public let retryStrategy: PoolConnectionRetryStrategy
+        /// A function used to handle Redis connection.
+        public let connectionHandler: ((Result<RedisConnection, Error>) -> Void)?
 
         // these need to be var so they can be updated by the pool in some cases
 
@@ -240,13 +242,15 @@ extension RedisConnectionPool {
             connectionCountBehavior: ConnectionCountBehavior,
             connectionConfiguration: PoolConnectionConfiguration,
             retryStrategy: PoolConnectionRetryStrategy = .exponentialBackoff(),
-            poolDefaultLogger: Logger? = nil
+            poolDefaultLogger: Logger? = nil,
+            connectionHandler: ((Result<RedisConnection, Error>) -> Void)? = nil
         ) {
             self.initialConnectionAddresses = initialServerConnectionAddresses
             self.connectionCountBehavior = connectionCountBehavior
             self.connectionConfiguration = connectionConfiguration
             self.retryStrategy = retryStrategy
             self.poolDefaultLogger = poolDefaultLogger ?? .redisBaseConnectionPoolLogger
+            self.connectionHandler = connectionHandler
         }
     }
 }
