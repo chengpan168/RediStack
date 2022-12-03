@@ -54,7 +54,7 @@ extension RedisCommand {
     /// [AUTH](https://redis.io/commands/auth)
     /// - Parameter username: The username to authenticate with.
     /// - Parameter password: The password to authenticate with.
-    public static func auth(username: String?, password: String) -> RedisCommand<Void> {
+    public static func auth(username: String? = nil, password: String) -> RedisCommand<Void> {
         var args:[RESPValue] = [RESPValue(from: password)]
         if let username = username {
             args.insert(RESPValue(from: username), at: 0)
