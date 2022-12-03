@@ -2,7 +2,7 @@
 //
 // This source file is part of the RediStack open source project
 //
-// Copyright (c) 2019-2020 RediStack project authors
+// Copyright (c) 2019-2022 RediStack project authors
 // Licensed under Apache License v2.0
 //
 // See LICENSE.txt for license information
@@ -13,7 +13,8 @@
 //===----------------------------------------------------------------------===//
 
 import Foundation
-import NIO
+import Logging
+import NIOCore
 import RediStack
 
 extension RedisConnection.Configuration {
@@ -24,9 +25,10 @@ extension RedisConnection.Configuration {
         host: String = RedisConnection.Configuration.defaultHostname,
         port: Int = RedisConnection.Configuration.defaultPort,
         username: String? = nil,
-        password: String? = nil
+        password: String? = nil,
+        defaultLogger: Logger? = nil
     ) throws {
-        try self.init(hostname: host, port: port, username: username, password: password)
+        try self.init(hostname: host, port: port, username: username, password: password, defaultLogger: defaultLogger)
     }
 }
 

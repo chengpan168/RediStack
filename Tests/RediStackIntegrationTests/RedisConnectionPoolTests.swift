@@ -12,7 +12,8 @@
 //
 //===----------------------------------------------------------------------===//
 
-import NIO
+import NIOCore
+import NIOPosix
 import Logging
 @testable import RediStack
 import RediStackTestUtils
@@ -179,7 +180,7 @@ extension RedisConnectionPoolTests {
         }
 
         try self.pool
-            .subscribe(to: #function, eventLoop: eventLoop) { _, _ in }
+            .subscribe(to: #function, eventLoop: eventLoop, { _ in })
             .map { _ in eventLoop.assertInEventLoop() }
             .wait()
     }
@@ -194,7 +195,7 @@ extension RedisConnectionPoolTests {
         }
 
         try self.pool
-            .psubscribe(to: #function, eventLoop: eventLoop) { _, _ in }
+            .psubscribe(to: #function, eventLoop: eventLoop, { _ in })
             .map { _ in eventLoop.assertInEventLoop() }
             .wait()
     }
